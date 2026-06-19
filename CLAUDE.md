@@ -16,15 +16,18 @@ There are no tests in this project.
 
 ## Architecture
 
-This is a single-component React app built with Vite. All application logic lives in `src/App.jsx` — there are no sub-components, no routing, no state management library, and no backend.
+React app built with Vite, split into four components. No routing, no state management library, no backend.
 
-**State** is managed entirely with `useState` in `App`:
-- `transactions` — array of transaction objects (`{ id, description, amount, type, category, date }`)
-- Form fields: `description`, `amount`, `type`, `category`
-- Filter controls: `filterType`, `filterCategory`
+**Component structure:**
+- `App.jsx` — holds `transactions` state and passes it down; the only place `setTransactions` is called
+- `Summary.jsx` — receives `transactions`, computes `totalIncome`, `totalExpenses`, and `balance` internally
+- `TransactionForm.jsx` — owns its own form state (`description`, `amount`, `type`, `category`); calls `onAdd(transaction)` prop on submit
+- `TransactionList.jsx` — receives `transactions`, owns filter state (`filterType`, `filterCategory`) internally
 
-**Known bug**: `amount` is stored as a string (from the input value), so `.reduce()` on it concatenates strings instead of summing numbers — totals and balance display incorrectly for the seed data and any added transactions.
+**Transaction shape**: `{ id, description, amount (number), type ("income"|"expense"), category, date (YYYY-MM-DD) }`
 
-**Seed data**: Transaction #4 ("Freelance Work") is typed as `"expense"` but categorized as `"salary"` — likely an intentional data error from the course.
+**Shared constants**: `categories` array is duplicated in `TransactionForm` and `TransactionList` — no shared constants file yet.
 
-**Styling**: Plain CSS in `src/App.css` with utility classes `income-amount`, `expense-amount`, `balance-amount`, and `delete-btn` (the delete button is styled but delete functionality is not implemented in the starter).
+**Seed data**: Transaction #4 ("Freelance Work") is typed as `"expense"` but categorized as `"salary"`.
+
+**Styling**: Plain CSS in `src/App.css` with utility classes `income-amount`, `expense-amount`, `balance-amount`, and `delete-btn` (the delete button is styled but delete functionality is not yet implemented).
